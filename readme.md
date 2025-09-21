@@ -16,12 +16,9 @@ Este es un proyecto con Symfony que implementa una pequeña API y un comando par
 
 ## Primeros pasos:
 
-**Clonar el repositorio y entrar en la carpeta:**
+**Clonar el repositorio:**
 ```bash
 git clone https://github.com/pabloportillo/apiviajes.git
-```
-```bash
-cd apiviajes
 ```
 
 **Instalar dependencias:**
