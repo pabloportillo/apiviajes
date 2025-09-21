@@ -7,29 +7,27 @@ Este es un proyecto con Symfony que implementa una pequeña API y un comando par
 - Symfony 7
 - PHPUnit (para los tests automatizados)
 
-## Estructura
+## Estructura básica
 - `src/Entity/FlightSegment.php` → Entidad con los campos del modelo Segment.
-- `src/Proveedor/ProveedorDisponibilidad.php` → Clase que consulta al proveedor (GET al endpoint) para obtener los vuelos, parsea el XML y devuelve objetos FlightSegment.
-- `src/Controller/DisponibilidadController.php` → Controlador con el Endpoint `/api/avail`.
+- `src/Proveedor/ProveedorDisponibilidad.php` → Clase que consulta al proveedor (GET al endpoint), parsea el XML y devuelve objetos FlightSegment.
+- `src/Controller/DisponibilidadController.php` → Controlador con el endpoint `/api/avail`.
 - `src/Comando/DisponibilidadComando.php` → Comando que devuelve los vuelos `lleego:avail`.
 - `tests/DisponibilidadControllerTest.php` → Tests del controlador.
 
 ## Endpoint API
-**Arrancamos el servidor:**
 
+**Arrancar el servidor:**
 ```bash
 symfony server:start -d
-```
+Realizar la petición:
 
-**Realizar la petición:**
-
-```bash
+bash
+Copiar código
 curl "http://127.0.0.1:8000/api/avail?origin=MAD&destination=BIO&date=2022-06-01"
-```
+Tipo de respuesta JSON:
 
-**Tipo de respuesta JSON:**
-
-```bash
+json
+Copiar código
 [
   {
     "originCode": "MAD",
@@ -41,19 +39,17 @@ curl "http://127.0.0.1:8000/api/avail?origin=MAD&destination=BIO&date=2022-06-01
     "transportNumber": "0426",
     "companyCode": "IB",
     "companyName": "IB"
-  },
-  ...
+  }
 ]
-```
+Comando
+Ejecutar desde consola:
 
-## Comando
-**Ejecutar desde consola:**
-```bash
+bash
+Copiar código
 php bin/console lleego:avail MAD BIO 2022-06-01
-```
+Tests
+Ejecutar los tests:
 
-## Tests
-**Ejecutar los tests:**
-```bash
+bash
+Copiar código
 php bin/phpunit
-```
