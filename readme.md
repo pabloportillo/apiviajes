@@ -14,12 +14,28 @@ Este es un proyecto con Symfony que implementa una pequeña API y un comando par
 - `src/Comando/DisponibilidadComando.php` → Comando que devuelve los vuelos `lleego:avail`.
 - `tests/DisponibilidadControllerTest.php` → Tests del controlador.
 
-## Endpoint API
+## Primeros pasos:
+
+**Clonar el repositorio y entrar en la carpeta:**
+```bash
+git clone https://github.com/pabloportillo/apiviajes.git
+```
+```bash
+cd apiviajes
+```
+
+**Instalar dependencias:**
+```bash
+composer install
+```
+
 **Arrancamos el servidor:**
 
 ```bash
 symfony server:start -d
 ```
+
+## Endpoint API
 
 **Realizar la petición:**
 
