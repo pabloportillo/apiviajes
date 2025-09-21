@@ -64,12 +64,12 @@ class ProveedorDisponibilidad
                 continue;
             }
 
-            // Filtrar por los parámetros que nos pasaron
+            // Filtramos por los parámetros que nos pasaron
             if ($depAirport !== $origen) continue;
             if ($arrAirport !== $destino) continue;
             if ($depDate !== $fechaIso) continue;
 
-            // Fechas simples (ej: 2022-06-01 11:50)
+            // Formamos las fechas
             $start = $depDate . ' ' . $depTime;
             $end   = $arrDate . ' ' . $arrTime;
 
