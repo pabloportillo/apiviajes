@@ -2,22 +2,19 @@
 
 namespace App\Proveedor;
 
-use App\Entity\FlightSegment;
+use App\Entity\Segment;
 use Symfony\Component\HttpClient\HttpClient;
 
 /**
- * Proveedor de disponibilidad de vuelos.
- * Hace GET al endpoint sin SOAP, 
- * Lee el XML y devuelve la lista de vuelos "FlightSegment".
+ * Adaptador: clase que conecta con el endpoint HTTP y obtiene los vuelos.
  */
-class ProveedorDisponibilidad
+class ProveedorDisponibilidadHttp implements ProveedorDisponibilidadInterface
 {
     public function buscar(string $origen, string $destino, string $fechaIso): array
     {
         $origen  = strtoupper($origen);
         $destino = strtoupper($destino);
 
-        // Llamada HTTP
         $client = HttpClient::create();
         $url = 'https://testapi.lleego.com/prueba-tecnica/availability-price-without-soap'
              . '?origin=' . urlencode($origen)
@@ -31,13 +28,11 @@ class ProveedorDisponibilidad
             return [['error' => 'Proveedor no disponible']];
         }
 
-        // Cargamos el XML
         $doc = new \DOMDocument();
         if (@$doc->loadXML($xml) === false) {
             return [['error' => 'XML inválido']];
         }
 
-        // Buscamos todos los "FlightSegment"
         $nodos = $doc->getElementsByTagName('FlightSegment');
         $lista = [];
 
@@ -59,32 +54,43 @@ class ProveedorDisponibilidad
             $airlineID = $carrier?->getElementsByTagName('AirlineID')->item(0)?->nodeValue ?? '';
             $flightNum = $carrier?->getElementsByTagName('FlightNumber')->item(0)?->nodeValue ?? '';
 
-            // Si faltan datos, lo saltamos
+            // Validaciones mínimas
             if ($depAirport === '' || $arrAirport === '' || $depDate === '' || $arrDate === '' || $depTime === '' || $arrTime === '') {
                 continue;
             }
 
-            // Filtramos por los parámetros que nos pasaron
-            if ($depAirport !== $origen) continue;
-            if ($arrAirport !== $destino) continue;
-            if ($depDate !== $fechaIso) continue;
+            // Filtramos por parámetros
+            if ($depAirport !== $origen) {
+                continue;
+            }
+            if ($arrAirport !== $destino) {
+                continue;
+            }
+            if ($depDate !== $fechaIso) {
+                continue;
+            }
 
-            // Formamos las fechas
-            $start = $depDate . ' ' . $depTime;
-            $end   = $arrDate . ' ' . $arrTime;
+            // Creamos las fechas
+            $startDt = \DateTime::createFromFormat('Y-m-d H:i', $depDate.' '.$depTime);
+            $endDt   = \DateTime::createFromFormat('Y-m-d H:i', $arrDate.' '.$arrTime);
 
-            // Creamos el objeto FlightSegment
-            $lista[] = new FlightSegment(
-                $depAirport,
-                $depAirport,
-                $arrAirport,
-                $arrAirport, 
-                $start,
-                $end,
-                $flightNum !== '' ? $flightNum : '0000',
-                $airlineID !== '' ? $airlineID : 'XX',
-                $airlineID !== '' ? $airlineID : 'XX'
-            );
+            // Si fallan, salta este segmento
+            if ($startDt === false || $endDt === false) {
+                continue;
+            }
+
+            $segment = (new Segment())
+                ->setOriginCode($depAirport)
+                ->setOriginName($depAirport)
+                ->setDestinationCode($arrAirport)
+                ->setDestinationName($arrAirport)
+                ->setStart($startDt)
+                ->setEnd($endDt)
+                ->setTransportNumber($flightNum !== '' ? $flightNum : '0000')
+                ->setCompanyCode($airlineID !== '' ? $airlineID : 'XX')
+                ->setCompanyName($airlineID !== '' ? $airlineID : 'XX');
+
+            $lista[] = $segment;
         }
 
         return $lista;

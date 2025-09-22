@@ -7,11 +7,23 @@ Este es un proyecto con Symfony que implementa una pequeña API y un comando par
 - Symfony 7
 - PHPUnit (para los tests automatizados)
 
+## Arquitectura
+El proyecto sigue una pequeña versión de la **Arquitectura Hexagonal (Puertos y Adaptadores)**:
+- **Entidad de dominio**: `Segment.php`
+- **Puerto**: `ProveedorDisponibilidadInterface.php`
+- **Adaptador**: `ProveedorDisponibilidadHttp.php`
+- **Caso de uso**: `ConsultarDisponibilidad.php`
+- **Entradas**: `DisponibilidadController.php` (API) y `DisponibilidadComando.php` (Comando)
+
+De esta forma, el dominio y los casos de uso no dependen de detalles técnicos (como HTTP), y el adaptador se puede sustituir fácilmente.
+
 ## Estructura
-- `src/Entity/FlightSegment.php` → Entidad con los campos del modelo Segment.
-- `src/Proveedor/ProveedorDisponibilidad.php` → Clase que consulta al proveedor (GET al endpoint) para obtener los vuelos, parsea el XML y devuelve objetos FlightSegment.
-- `src/Controller/DisponibilidadController.php` → Controlador con el Endpoint `/api/avail`.
-- `src/Comando/DisponibilidadComando.php` → Comando que devuelve los vuelos `lleego:avail`.
+- `src/Entity/Segment.php` → Entidad de dominio que representa un vuelo (Segment).
+- `src/Proveedor/ProveedorDisponibilidadInterface.php` → Puerto (interfaz) para consultar disponibilidad.
+- `src/Proveedor/ProveedorDisponibilidadHttp.php` → Adaptador que implementa el puerto y llama al endpoint HTTP.
+- `src/Aplicacion/ConsultarDisponibilidad.php` → Caso de uso que gestiona la consulta de disponibilidad.
+- `src/Controller/DisponibilidadController.php` → Controlador con el endpoint `/api/avail`.
+- `src/Comando/DisponibilidadComando.php` → Comando que muestra los vuelos (`lleego:avail`).
 - `tests/DisponibilidadControllerTest.php` → Tests del controlador.
 
 ## Primeros pasos:
