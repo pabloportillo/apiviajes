@@ -1,6 +1,7 @@
 # Proyecto apiviajes
 
-Este es un proyecto con Symfony que implementa una pequeña API y un comando para consultar disponibilidad de vuelos desde un proveedor.
+Este es un proyecto con Symfony que implementa una pequeña API y un comando para consultar disponibilidad de vuelos desde un proveedor, 
+siguiendo la arquitectura de Puertos y Adaptadores (Hexagonal).
 
 ## Tecnologías
 - PHP 8.3
