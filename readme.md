@@ -9,7 +9,7 @@ siguiendo la arquitectura de Puertos y Adaptadores (Hexagonal).
 - PHPUnit (para los tests automatizados)
 
 ## Arquitectura
-El proyecto sigue una pequeña versión de la **Arquitectura Hexagonal (Puertos y Adaptadores)**:
+El proyecto sigue una pequeña versión de la **Arquitectura Hexagonal**:
 - **Entidad de dominio**: `Segment.php`
 - **Puerto**: `ProveedorDisponibilidadInterface.php`
 - **Adaptador**: `ProveedorDisponibilidadHttp.php`
